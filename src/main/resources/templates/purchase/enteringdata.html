@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase form</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/purchase}" th:object="${bankCard}">
+    <label for="userName">Please Enter Your Name: </label>
+    <input type="text" maxlength="15" th:field="*{person.name}" id="userName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('person.name')}" th:errors="*{person.name}">Name Error</div>
+    <br/>
+    <label for="userSurname">Please Enter Your Surname: </label>
+    <input type="text" maxlength="20" th:field="*{person.surname}" id="userSurname"/>
+    <div style="color:red" th:if="${#fields.hasErrors('person.surname')}" th:errors="*{person.surname}">Surname Error</div>
+    <br/>
+    <label for="cardNumber">Please Enter Card Number: </label>
+    <input type="number" th:field="*{cardNumber}" id="cardNumber"/>
+    <div style="color:red" th:if="${#fields.hasErrors('cardNumber')}" th:errors="*{cardNumber}">Username Error</div>
+    <br/>
+    <div>
+        <label>Please pick Expiry Date</label>
+        <select th:object="${bankCard}" th:field="*{month}" >
+            <option th:each="month : ${monthPicker}"
+                    th:value="${month.getMonth()}"
+                    th:text="${month.getMonth()}"
+            ></option></select></div>
+          <div>  <select th:object="${bankCard}" th:field="*{year}" >
+        <option th:each="year : ${yearPicker}"
+                th:value="${year.getShortYear()}"
+                th:text="${year.getShortYear()}"
+        ></option>
+    </select>
+    </div>
+        <div style="color:red" th:if="${#fields.hasErrors('expiryDate')}" th:errors="*{expiryDate}">Expiry date error</div>
+    <br/>
+    <label for="verificationCode">Please Enter Card Verification Number: </label>
+    <input type="number"  th:field="*{verificationCode}" id="verificationCode"/>
+    <div style="color:red" th:if="${#fields.hasErrors('verificationCode')}" th:errors="*{verificationCode}">Password Error</div>
+    <br/>
+    <label for="email">Please Enter Your Email: </label>
+    <input type="text"  th:field="*{person.email}" id="email"/>
+    <div style="color:red" th:if="${#fields.hasErrors('person.email')}" th:errors="*{person.email}">Name Error</div>
+    <br/>
+    <input type="submit" value="Sign up!"/>
+</form>
+
+</body>
+</html>
