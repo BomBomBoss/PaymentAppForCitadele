@@ -4,8 +4,6 @@ package com.paymentapp.paymentappforcitadele.models;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
-
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -13,7 +11,7 @@ import java.time.LocalDate;
 @Component
 public class BankCard {
 
-    private int id = 0;
+
 
     @NotNull(message = "Please enter card number")
     @Pattern(regexp = "^\\d{16}", message = "Please enter correct verification number")
@@ -29,14 +27,13 @@ public class BankCard {
 
 
     @NotNull(message = "Please enter card verification number")
-    @Pattern(regexp = "^\\d{3}", message = "Please enter correct verification number")
+    @Pattern(regexp = "^\\d{3}", message = "Please enter correct verification number. 16 numbers")
     private String verificationCode;
 
     @Valid
     private Person person;
 
     public BankCard() {
-        this.id++;
     }
 
     @Autowired
@@ -103,18 +100,11 @@ public class BankCard {
         this.month = month;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
         return "BankCard{" +
-                "id=" + id +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", expiryDate=" + expiryDate +
                 ", verificationCode='" + verificationCode + '\'' +
@@ -128,7 +118,6 @@ public class BankCard {
 
         BankCard bankCard = (BankCard) o;
 
-        if (id != bankCard.id) return false;
         if (year != bankCard.year) return false;
         if (month != bankCard.month) return false;
         if (cardNumber != null ? !cardNumber.equals(bankCard.cardNumber) : bankCard.cardNumber != null) return false;
@@ -138,8 +127,7 @@ public class BankCard {
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (cardNumber != null ? cardNumber.hashCode() : 0);
+        int result = cardNumber != null ? cardNumber.hashCode() : 0;
         result = 31 * result + (expiryDate != null ? expiryDate.hashCode() : 0);
         result = 31 * result + year;
         result = 31 * result + month;

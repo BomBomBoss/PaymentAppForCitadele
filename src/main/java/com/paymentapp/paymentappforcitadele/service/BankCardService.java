@@ -9,16 +9,22 @@ import org.springframework.stereotype.Service;
 public class BankCardService {
 
     private final BankCardRepository bankCardRepository;
+    private int id = 0;
 
     @Autowired
     public BankCardService(BankCardRepository bankCardRepository) {
         this.bankCardRepository = bankCardRepository;
     }
-    public void saveBankCard(BankCard bankCard) {
-        bankCardRepository.bankCardSet.add(bankCard);
+    public int saveBankCard(BankCard bankCard) {
+        bankCardRepository.bankCardMap.put(++id, bankCard);
+        return id;
     }
 
     public void showAll(){
-        System.out.println(bankCardRepository.bankCardSet.toString());
+        System.out.println(bankCardRepository.bankCardMap.toString());
+    }
+
+    public BankCard findById(int id) {
+        return bankCardRepository.bankCardMap.get(id);
     }
 }
