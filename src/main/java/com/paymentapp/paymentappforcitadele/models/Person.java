@@ -15,7 +15,7 @@ public class Person {
 
     @Pattern(regexp = "^[a-zA-Z]{3,15}$", message = "Please enter your surname only with letters between 3 and 20 characters")
     private String surname;
-    
+
     @NotEmpty(message = "Please enter your email")
     @Email(message = "Please enter valid email")
     private String email;
@@ -69,5 +69,15 @@ public class Person {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }

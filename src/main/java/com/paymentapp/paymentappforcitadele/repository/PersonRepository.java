@@ -10,7 +10,7 @@ import java.util.Set;
 //in this app collections will be used instead of Data Base
 @Component
 public class PersonRepository {
-    Set<Person> personSet = new HashSet<>();
+    public Set<Person> personSet = new HashSet<>();
 
     public PersonRepository() {
     }

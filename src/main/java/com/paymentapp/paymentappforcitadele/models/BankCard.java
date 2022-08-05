@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Component
 public class BankCard {
 
+    private int id = 0;
+
     @NotNull(message = "Please enter card number")
     @Pattern(regexp = "^\\d{16}", message = "Please enter correct verification number")
     private String cardNumber;
@@ -34,12 +36,14 @@ public class BankCard {
     private Person person;
 
     public BankCard() {
+        this.id++;
     }
 
     @Autowired
     public BankCard(Person person) {
         this.person = person;
     }
+
 
     public BankCard(String cardNumber, LocalDate expiryDate, String verificationCode, Person person) {
         this.cardNumber = cardNumber;
@@ -97,5 +101,49 @@ public class BankCard {
 
     public void setMonth(int month) {
         this.month = month;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "BankCard{" +
+                "id=" + id +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", expiryDate=" + expiryDate +
+                ", verificationCode='" + verificationCode + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BankCard bankCard = (BankCard) o;
+
+        if (id != bankCard.id) return false;
+        if (year != bankCard.year) return false;
+        if (month != bankCard.month) return false;
+        if (cardNumber != null ? !cardNumber.equals(bankCard.cardNumber) : bankCard.cardNumber != null) return false;
+        if (expiryDate != null ? !expiryDate.equals(bankCard.expiryDate) : bankCard.expiryDate != null) return false;
+        return verificationCode != null ? verificationCode.equals(bankCard.verificationCode) : bankCard.verificationCode == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (cardNumber != null ? cardNumber.hashCode() : 0);
+        result = 31 * result + (expiryDate != null ? expiryDate.hashCode() : 0);
+        result = 31 * result + year;
+        result = 31 * result + month;
+        result = 31 * result + (verificationCode != null ? verificationCode.hashCode() : 0);
+        return result;
     }
 }
