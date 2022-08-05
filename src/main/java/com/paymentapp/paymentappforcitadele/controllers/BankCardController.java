@@ -76,19 +76,23 @@ public class BankCardController {
         if(bindingResult.hasErrors()) return ("/purchase/enteringdata");
 
         personService.savePerson(bankCard.getPerson());
-        bankCardService.saveBankCard(bankCard);
+        int id = bankCardService.saveBankCard(bankCard);
 
         personService.showAll();
         bankCardService.showAll();
-        return "redirect:/mail/" + bankCard.getId();
+        return "redirect:/mail/" + id;
     }
 
-    @GetMapping("/mail")
-    public String mailSender(@PathVariable int id,
-                             @ModelAttribute BankCard bankCard){
-
-         emailSenderService.sendEmail();
-         return "complete";
+    @GetMapping("/mail/{id}")
+    public String mailSender(@PathVariable int id){
+        BankCard bankCard = bankCardService.findById(id);
+        String mailTo = bankCard.getPerson().getEmail();
+        String subject = "Successful payment";
+        String body = "Dear, " + bankCard.getPerson().getName() + ", your payment was performed with card ****" +
+                bankCard.getCardNumber().substring(12,16);
+        emailSenderService.sendEmail(mailTo,subject,body);
+        System.out.println(bankCard);
+        return "complete";
     }
 
 }
