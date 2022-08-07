@@ -14,7 +14,7 @@ public class BankCard {
 
 
     @NotNull(message = "Please enter card number")
-    @Pattern(regexp = "^\\d{16}", message = "Please enter correct verification number")
+    @Pattern(regexp = "^\\d{16}", message = "Please enter correct verification number. 16 numbers allowed")
     private String cardNumber;
 
 
@@ -27,7 +27,7 @@ public class BankCard {
 
 
     @NotNull(message = "Please enter card verification number")
-    @Pattern(regexp = "^\\d{3}", message = "Please enter correct verification number. 16 numbers")
+    @Pattern(regexp = "^\\d{3}", message = "Please enter correct verification number. 3 numbers allowed")
     private String verificationCode;
 
     @Valid

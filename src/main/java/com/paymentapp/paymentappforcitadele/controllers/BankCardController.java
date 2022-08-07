@@ -4,11 +4,14 @@ import com.paymentapp.paymentappforcitadele.models.BankCard;
 import com.paymentapp.paymentappforcitadele.models.MonthPicker;
 import com.paymentapp.paymentappforcitadele.models.YearPicker;
 import com.paymentapp.paymentappforcitadele.service.BankCardService;
+import com.paymentapp.paymentappforcitadele.service.BookService;
 import com.paymentapp.paymentappforcitadele.service.EmailSenderService;
 import com.paymentapp.paymentappforcitadele.service.PersonService;
 import com.paymentapp.paymentappforcitadele.util.BankCardValidator;
 import com.paymentapp.paymentappforcitadele.util.PersonValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,14 +32,17 @@ public class BankCardController {
     private final PersonService personService;
     private final BankCardService bankCardService;
     private final EmailSenderService emailSenderService;
+    private final BookService bookService;
 
 
 
-    public BankCardController(BankCardValidator bankCardValidator, PersonValidator personValidator, PersonService personService, BankCardService bankCardService, EmailSenderService emailSenderService) {
+    @Autowired
+    public BankCardController(BankCardValidator bankCardValidator, PersonValidator personValidator, PersonService personService, BankCardService bankCardService, EmailSenderService emailSenderService, BookService bookService) {
         this.bankCardValidator = bankCardValidator;
         this.personService = personService;
         this.bankCardService = bankCardService;
         this.emailSenderService = emailSenderService;
+        this.bookService = bookService;
     }
 
     @ModelAttribute("yearPicker")
@@ -93,6 +99,12 @@ public class BankCardController {
         emailSenderService.sendEmail(mailTo,subject,body);
         System.out.println(bankCard);
         return "complete";
+    }
+
+    @GetMapping("/list/{id}")
+    public String showListOfBooks(@PathVariable String id, Model model) {
+        model.addAttribute("bookList",bookService.findByType(id));
+        return "/list";
     }
 
 }
