@@ -1,7 +1,6 @@
 package com.paymentapp.paymentappforcitadele.controllers;
 
 import com.paymentapp.paymentappforcitadele.models.BankCard;
-import com.paymentapp.paymentappforcitadele.models.Book;
 import com.paymentapp.paymentappforcitadele.models.MonthPicker;
 import com.paymentapp.paymentappforcitadele.models.YearPicker;
 import com.paymentapp.paymentappforcitadele.service.BankCardService;
@@ -9,7 +8,6 @@ import com.paymentapp.paymentappforcitadele.service.BookService;
 import com.paymentapp.paymentappforcitadele.service.EmailSenderService;
 import com.paymentapp.paymentappforcitadele.service.PersonService;
 import com.paymentapp.paymentappforcitadele.util.BankCardValidator;
-import com.paymentapp.paymentappforcitadele.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class BankCardController {
@@ -41,7 +36,7 @@ public class BankCardController {
 
 
     @Autowired
-    public BankCardController(BankCardValidator bankCardValidator, PersonValidator personValidator, PersonService personService, BankCardService bankCardService, EmailSenderService emailSenderService, BookService bookService) {
+    public BankCardController(BankCardValidator bankCardValidator,PersonService personService, BankCardService bankCardService, EmailSenderService emailSenderService, BookService bookService) {
         this.bankCardValidator = bankCardValidator;
         this.personService = personService;
         this.bankCardService = bankCardService;
@@ -103,15 +98,10 @@ public class BankCardController {
     }
 
     @GetMapping("/mail/{id}")
-    public String mailSender(@PathVariable("id") int id){
+    public String mailSender(@PathVariable("id") int id,Model model){
         BankCard bankCard = bankCardService.findById(id);
-        Book book = bankCard.getPerson().getBook();
-        String mailTo = bankCard.getPerson().getEmail();
-        String subject = "Successful payment";
-        String body = "Dear, " + bankCard.getPerson().getName() + ", your payment was performed with card ****" +
-                bankCard.getCardNumber().substring(12,16) + " at this date: "+ LocalDate.now()
-                + " and local time: " + LocalTime.now().truncatedTo(ChronoUnit.MINUTES) +"\n\rBook title: " + book.getTitle() + "\n\rAuthor: " + book.getAuthor();
-        emailSenderService.sendEmail(mailTo,subject,body);
+        model.addAttribute("person", bankCard.getPerson());
+        emailSenderService.sendEmail(bankCard);
         System.out.println(bankCard);
         return "complete";
     }
