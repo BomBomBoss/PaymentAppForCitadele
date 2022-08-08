@@ -1,11 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="h-100">
 <head>
     <meta charset="UTF-8">
-    <title>mail</title>
+    <title>Successful payment</title>
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/5.2/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="https://getbootstrap.com/docs/5.2/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="https://getbootstrap.com/docs/5.2/assets/img/favicons/safari-pinned-tab.svgg" color="#712cf9">
+    <meta name="theme-color" content="#712cf9">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/cover/">
+    <link href="https://getbootstrap.com/docs/5.2/examples/cover/cover.css" rel="stylesheet">
 </head>
-<body>
-mail was sent
-<a href="/purchase">Go back</a>
+
+<body class="d-flex h-100 text-center text-bg-dark">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+        <div>
+            <a href="/"><h3 class="float-md-start mb-5">Book Shop</h3></a>
+            <nav class="nav nav-masthead justify-content-center float-md-end">
+            </nav>
+        </div>
+    </header>
+    <main class="px-2">
+        <h1> Please select preferred book</h1>
+<!--        <div th:each="books : ${bookList}">-->
+<!--            <a th:href="@{/purchase}" th:text="${books.getTitle()}">book</a>-->
+<!--            <p th:text="${'Author: ' + books.getAuthor() + ' Year: ' + books.getYear()}"></p>-->
+<!--            <p th:text="${'Description: ' + books.getDescription()}"></p>-->
+<!--            <hr>-->
+<!--        </div>-->
+    </main>
+    <footer class="mt-auto text-white-50">
+        <p class="lead">
+            <a href="/" class="btn btn-lg bg-primary fw-bold border-white bg-info">To Main Page</a>
+        </p>
+    </footer>
+<!--<a href="/purchase">Go back</a>-->
+</div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.paymentapp.paymentappforcitadele.controllers;
 
 import com.paymentapp.paymentappforcitadele.models.BankCard;
+import com.paymentapp.paymentappforcitadele.models.Book;
 import com.paymentapp.paymentappforcitadele.models.MonthPicker;
 import com.paymentapp.paymentappforcitadele.models.YearPicker;
 import com.paymentapp.paymentappforcitadele.service.BankCardService;
@@ -20,10 +21,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class BankCardController {
@@ -69,41 +73,55 @@ public class BankCardController {
     }
 
 
-    @GetMapping("/purchase")
-    public String purchase(@ModelAttribute("bankCard") BankCard bankCard){
+    @GetMapping("/{bookType}/{id}/purchase")
+    public String purchase(@ModelAttribute("bankCard") BankCard bankCard, Model model,
+                           @PathVariable("bookType") String type, @PathVariable("id") int id){
+        model.addAttribute("book", bookService.findById(type, id));
+        model.addAttribute("bookType", type);
+        model.addAttribute("id", id);
         return "/purchase/enteringdata";
     }
 
-    @PostMapping("/purchase")
-    public String performPurchase(@ModelAttribute @Valid BankCard bankCard, BindingResult bindingResult){
+    @PostMapping("{bookType}/{id}/purchase")
+    public String performPurchase(@ModelAttribute @Valid BankCard bankCard, BindingResult bindingResult,
+                                 Model model, @PathVariable("bookType") String type, @PathVariable("id") int id){
+        model.addAttribute("book", bookService.findById(type, id));
+        model.addAttribute("bookType", type);
+        model.addAttribute("id", id);
         YearMonth yearMonth = YearMonth.of(bankCard.getYear(), bankCard.getMonth());
         bankCard.setExpiryDate(LocalDate.of(bankCard.getYear(), bankCard.getMonth(), yearMonth.lengthOfMonth()));
         bankCardValidator.validate(bankCard, bindingResult);
         if(bindingResult.hasErrors()) return ("/purchase/enteringdata");
 
         personService.savePerson(bankCard.getPerson());
-        int id = bankCardService.saveBankCard(bankCard);
+        bankCard.getPerson().setBook(bookService.findById(type,id));
+        int cardId = bankCardService.saveBankCard(bankCard);
 
-        personService.showAll();
-        bankCardService.showAll();
-        return "redirect:/mail/" + id;
+        personService.showAll();//for test
+        bankCardService.showAll(); // for test
+        return "redirect:/mail/" + cardId;
     }
 
     @GetMapping("/mail/{id}")
-    public String mailSender(@PathVariable int id){
+    public String mailSender(@PathVariable("id") int id){
         BankCard bankCard = bankCardService.findById(id);
+        Book book = bankCard.getPerson().getBook();
         String mailTo = bankCard.getPerson().getEmail();
         String subject = "Successful payment";
         String body = "Dear, " + bankCard.getPerson().getName() + ", your payment was performed with card ****" +
-                bankCard.getCardNumber().substring(12,16);
+                bankCard.getCardNumber().substring(12,16) + " at this date: "+ LocalDate.now()
+                + " and local time: " + LocalTime.now().truncatedTo(ChronoUnit.MINUTES) +"\n\rBook title: " + book.getTitle() + "\n\rAuthor: " + book.getAuthor();
         emailSenderService.sendEmail(mailTo,subject,body);
         System.out.println(bankCard);
         return "complete";
     }
 
-    @GetMapping("/list/{id}")
-    public String showListOfBooks(@PathVariable String id, Model model) {
-        model.addAttribute("bookList",bookService.findByType(id));
+
+    @GetMapping("/list/{bookType}")
+    public String showListOfBooks(@PathVariable String bookType, Model model) {
+        model.addAttribute("bookList",bookService.findByType(bookType));
+        model.addAttribute("bookType", bookType);
+        System.out.println(bookService.findByType(bookType));//just for test
         return "/list";
     }
 

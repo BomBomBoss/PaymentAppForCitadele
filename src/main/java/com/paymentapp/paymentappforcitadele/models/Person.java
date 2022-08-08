@@ -7,7 +7,6 @@ import javax.validation.constraints.*;
 @Component
 public class Person {
 
-    private static int id;
 
 
     @Pattern(regexp = "^[a-zA-Z]{3,15}$", message = "Please enter your name only with letters between 3 and 15 characters")
@@ -21,6 +20,8 @@ public class Person {
     private String email;
     private String address;
 
+    private Book book;
+
     public Person(String name, String surname, String email, String address) {
         this.name = name;
         this.surname = surname;
@@ -31,13 +32,6 @@ public class Person {
     public Person() {
     }
 
-    public static int getId() {
-        return id;
-    }
-
-    public static void setId(int id) {
-        Person.id = id;
-    }
 
     public String getName() {
         return name;
@@ -69,6 +63,14 @@ public class Person {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     @Override
