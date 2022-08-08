@@ -8,7 +8,6 @@ import com.paymentapp.paymentappforcitadele.service.BookService;
 import com.paymentapp.paymentappforcitadele.service.EmailSenderService;
 import com.paymentapp.paymentappforcitadele.service.PersonService;
 import com.paymentapp.paymentappforcitadele.util.BankCardValidator;
-import com.paymentapp.paymentappforcitadele.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +36,7 @@ public class BankCardController {
 
 
     @Autowired
-    public BankCardController(BankCardValidator bankCardValidator, PersonValidator personValidator, PersonService personService, BankCardService bankCardService, EmailSenderService emailSenderService, BookService bookService) {
+    public BankCardController(BankCardValidator bankCardValidator,PersonService personService, BankCardService bankCardService, EmailSenderService emailSenderService, BookService bookService) {
         this.bankCardValidator = bankCardValidator;
         this.personService = personService;
         this.bankCardService = bankCardService;
@@ -69,41 +68,50 @@ public class BankCardController {
     }
 
 
-    @GetMapping("/purchase")
-    public String purchase(@ModelAttribute("bankCard") BankCard bankCard){
+    @GetMapping("/{bookType}/{id}/purchase")
+    public String purchase(@ModelAttribute("bankCard") BankCard bankCard, Model model,
+                           @PathVariable("bookType") String type, @PathVariable("id") int id){
+        model.addAttribute("book", bookService.findById(type, id));
+        model.addAttribute("bookType", type);
+        model.addAttribute("id", id);
         return "/purchase/enteringdata";
     }
 
-    @PostMapping("/purchase")
-    public String performPurchase(@ModelAttribute @Valid BankCard bankCard, BindingResult bindingResult){
+    @PostMapping("{bookType}/{id}/purchase")
+    public String performPurchase(@ModelAttribute @Valid BankCard bankCard, BindingResult bindingResult,
+                                 Model model, @PathVariable("bookType") String type, @PathVariable("id") int id){
+        model.addAttribute("book", bookService.findById(type, id));
+        model.addAttribute("bookType", type);
+        model.addAttribute("id", id);
         YearMonth yearMonth = YearMonth.of(bankCard.getYear(), bankCard.getMonth());
         bankCard.setExpiryDate(LocalDate.of(bankCard.getYear(), bankCard.getMonth(), yearMonth.lengthOfMonth()));
         bankCardValidator.validate(bankCard, bindingResult);
         if(bindingResult.hasErrors()) return ("/purchase/enteringdata");
 
         personService.savePerson(bankCard.getPerson());
-        int id = bankCardService.saveBankCard(bankCard);
+        bankCard.getPerson().setBook(bookService.findById(type,id));
+        int cardId = bankCardService.saveBankCard(bankCard);
 
-        personService.showAll();
-        bankCardService.showAll();
-        return "redirect:/mail/" + id;
+        personService.showAll();//for test
+        bankCardService.showAll(); // for test
+        return "redirect:/mail/" + cardId;
     }
 
     @GetMapping("/mail/{id}")
-    public String mailSender(@PathVariable int id){
+    public String mailSender(@PathVariable("id") int id,Model model){
         BankCard bankCard = bankCardService.findById(id);
-        String mailTo = bankCard.getPerson().getEmail();
-        String subject = "Successful payment";
-        String body = "Dear, " + bankCard.getPerson().getName() + ", your payment was performed with card ****" +
-                bankCard.getCardNumber().substring(12,16);
-        emailSenderService.sendEmail(mailTo,subject,body);
+        model.addAttribute("person", bankCard.getPerson());
+        emailSenderService.sendEmail(bankCard);
         System.out.println(bankCard);
         return "complete";
     }
 
-    @GetMapping("/list/{id}")
-    public String showListOfBooks(@PathVariable String id, Model model) {
-        model.addAttribute("bookList",bookService.findByType(id));
+
+    @GetMapping("/list/{bookType}")
+    public String showListOfBooks(@PathVariable String bookType, Model model) {
+        model.addAttribute("bookList",bookService.findByType(bookType));
+        model.addAttribute("bookType", bookType);
+        System.out.println(bookService.findByType(bookType));//just for test
         return "/list";
     }
 

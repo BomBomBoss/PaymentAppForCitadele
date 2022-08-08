@@ -2,12 +2,23 @@ package com.paymentapp.paymentappforcitadele.models;
 
 public class Book {
 
+    private static int counter = 1;
+    private int id;
     private String title;
     private String author;
     private int year;
     private String description;
+    private double price;
 
     public Book() {
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getTitle() {
@@ -45,17 +56,28 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", year=" + year +
                 ", description='" + description + '\'' +
                 '}';
     }
 
-    public Book(String title, String author, int year, String description) {
+    public int getId() {
+        return id;
+    }
+
+
+
+    public Book(String title, String author, int year, String description, double price) {
         this.title = title;
         this.author = author;
         this.year = year;
         this.description = description;
+        this.price = price;
+        this.id = counter;
+        counter++;
+
     }
 }
