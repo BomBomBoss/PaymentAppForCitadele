@@ -2,16 +2,16 @@ package com.paymentapp.paymentappforcitadele.repository;
 
 
 import com.paymentapp.paymentappforcitadele.models.Person;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.Set;
 
-//in this app collections will be used instead of Data Base
-@Component
-public class PersonRepository {
-    public Set<Person> personSet = new HashSet<>();
 
-    public PersonRepository() {
-    }
+@Repository
+public interface PersonRepository extends JpaRepository<Person, Integer> {
+    Person findByBookId(int id);
+
 }

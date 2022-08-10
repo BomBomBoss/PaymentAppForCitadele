@@ -1,37 +1,61 @@
 package com.paymentapp.paymentappforcitadele.models;
 
+import org.aspectj.bridge.IMessage;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.*;
 import javax.validation.constraints.*;
 
+@Entity
 @Component
+@Table(name = "Person")
 public class Person {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-
+    @Column(name = "name")
     @Pattern(regexp = "^[a-zA-Z]{3,15}$", message = "Please enter your name only with letters between 3 and 15 characters")
     private String name;
 
+    @Column(name = "surname")
     @Pattern(regexp = "^[a-zA-Z]{3,15}$", message = "Please enter your surname only with letters between 3 and 20 characters")
     private String surname;
 
+
+    @Column(name = "email")
     @NotEmpty(message = "Please enter your email")
     @Email(message = "Please enter valid email")
     private String email;
-    private String address;
 
+    @OneToOne
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 
-    public Person(String name, String surname, String email, String address) {
+    @OneToOne(mappedBy = "person", cascade = CascadeType.MERGE)
+    private BankCard bankCard;
+
+    public Person(String name, String surname, String email) {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.address = address;
     }
 
     public Person() {
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public BankCard getBankCard() {
+        return bankCard;
+    }
+
+    public void setBankCard(BankCard bankCard) {
+        this.bankCard = bankCard;
+    }
 
     public String getName() {
         return name;
@@ -57,13 +81,6 @@ public class Person {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public Book getBook() {
         return book;
@@ -76,10 +93,11 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
+                ", book=" + book +
                 '}';
     }
 }

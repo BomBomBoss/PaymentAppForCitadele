@@ -78,7 +78,7 @@
         <h3><div th:text="${book.getTitle() + ' by ' + book.getAuthor()}"></div></h3>
         <h4><div th:text="${'Price: ' + book.getPrice() + '$'}"></div></h4>
         <hr>
-<form class="form-group" th:method="POST" th:action="@{/{bookType}/{id}/purchase(bookType = ${bookType},id=${id})}" th:object="${bankCard}">
+<form class="form-group" th:method="POST" th:action="@{/{id}/purchase(id=${book.getId()})}" th:object="${bankCard}">
     <label for="userName"  class="col-sm-4 col-form-label">Please Enter Your Name: </label>
     <input type="text" maxlength="15"  th:field="*{person.name}" id="userName"/>
     <div style="color:red" th:if="${#fields.hasErrors('person.name')}" th:errors="*{person.name}">Name Error</div>

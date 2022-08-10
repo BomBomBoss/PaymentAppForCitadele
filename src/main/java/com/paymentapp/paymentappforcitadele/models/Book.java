@@ -1,14 +1,37 @@
 package com.paymentapp.paymentappforcitadele.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Book")
 public class Book {
 
-    private static int counter = 1;
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "author")
     private String author;
+
+    @Column(name = "year_of_publishing")
     private int year;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "price")
     private double price;
+
+    @Column(name="book_type")
+    private String bookType;
+
+
+    public String getBookType() {
+        return bookType;
+    }
 
     public Book() {
     }
@@ -53,6 +76,14 @@ public class Book {
         this.description = description;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setBookType(String bookType) {
+        this.bookType = bookType;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -76,8 +107,6 @@ public class Book {
         this.year = year;
         this.description = description;
         this.price = price;
-        this.id = counter;
-        counter++;
 
     }
 }

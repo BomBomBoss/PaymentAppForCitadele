@@ -6,32 +6,32 @@ import com.paymentapp.paymentappforcitadele.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class BookService {
 
+
     private final BookRepository bookRepository;
 
     @Autowired
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    public BookService( BookRepository bookDBRepository) {
+        this.bookRepository = bookDBRepository;
     }
 
-    public Set<Book> findByType(String type) {
-        return bookRepository.getBooksDB().get(type);
+    public List<Book> findByType(String type) {
+        return bookRepository.findAllByBookType(type);
     }
-    public Book findById(String type, int id) {
-//        return (Book) findByType(type).stream().filter(book -> book.getId()==id);
-        Set<Book> set = findByType(type);
-        for(Book b : set) {
-            if (b.getId()==id) return b;
-        }
-        return null;
+
+    public Book findById(int id) {
+        Optional<Book> book = bookRepository.findById(id);
+        return book.orElse(null);
     }
+
+    public List<Book> showAll() {
+        return bookRepository.findAll();
+    }
+
 
 }
