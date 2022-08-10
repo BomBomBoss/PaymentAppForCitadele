@@ -13,16 +13,19 @@ import java.time.LocalDate;
 @Component
 public class BankCard {
 
-    @Pattern(regexp = "^\\d{12,19}", message = "Card number length should be from 12 till 19 numbers")
+    //validation: only digits,length from 12 till 19 according to various bank cards
+    @Pattern(regexp = "^\\d{12,19}", message = "Card number length should be between 12 and 19 digits")
     private String cardNumber;
 
 
+    //Local Date format pattern
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate expiryDate;
 
 
 
-    @Pattern(regexp = "^\\d{3,4}", message = "Please enter correct verification number: 3-4 numbers allowed")
+    //validation: only digits,length from 3 till 4 according to various bank cards
+    @Pattern(regexp = "^\\d{3,4}", message = "Please enter correct verification number: 3-4 digits allowed")
     private String verificationCode;
 
     @Valid
@@ -31,7 +34,6 @@ public class BankCard {
     public BankCard() {
     }
 
-    @Autowired
     public BankCard(Person person) {
         this.person = person;
     }
