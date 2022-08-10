@@ -10,6 +10,7 @@ import org.springframework.util.DigestUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+//Service for Person model to work with Person table transactions in DB
 @Transactional(readOnly = true)
 @Service
 public class PersonService {

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Component
 public class BankCardValidator  implements Validator {
 
+    //Luhn Algorithm - standard algorithm to validate bank card using bank card number.
     public static boolean validateCreditCardNumber(String str) {
 
         int[] ints = new int[str.length()];
@@ -44,10 +45,12 @@ public class BankCardValidator  implements Validator {
     public void validate(Object target, Errors errors) {
         BankCard bankCard = (BankCard) target;
 
+        //validation where bank card expiry date shouldn't be less than today
         if(bankCard.getExpiryDate().compareTo(LocalDate.now())<0) {
             errors.rejectValue("expiryDate", "", "Please enter valid expiry date");
         }
 
+        //Luhn Algorithm implemented. If returns false, Card didn't pass validation
         if(!validateCreditCardNumber(bankCard.getCardNumber())){
             errors.rejectValue("cardNumber", "", "Please enter valid card number");
         }

@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+
+//Service class for sending email with correct data after performing book purchase
 @Service
 public class EmailSenderService {
 
@@ -29,6 +31,8 @@ public class EmailSenderService {
         Book book = person.getBook();
         String mailTo = person.getEmail();
         String subject = "Payment confirmation";
+        //Body will consist of customer's Name, last 4 digits if his bank card to verify that it's truly his purchase, date and time when customer performed payment ,
+        // and purchased book information, like title,author and price
         String body = "Dear, " + person.getName() + ", your payment was performed by card ****" +
         person.getCardLastFourDigits() + " on: "+ LocalDate.now()
                 + " and at : " + LocalTime.now().truncatedTo(ChronoUnit.MINUTES)  +"\n\rBook: " + book.getTitle()

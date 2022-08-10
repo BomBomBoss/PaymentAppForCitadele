@@ -1,9 +1,7 @@
 package com.paymentapp.paymentappforcitadele.models;
 
-import ch.qos.logback.classic.pattern.LineOfCallerConverter;
 
-import java.time.LocalDate;
-
+//This class is created for implementing drop down list (Year) on purchase form for the bank card expiry date.
 public class YearPicker {
 
     private int shortYear;

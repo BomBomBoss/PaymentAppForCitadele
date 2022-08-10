@@ -1,11 +1,11 @@
 package com.paymentapp.paymentappforcitadele.models;
 
-import org.aspectj.bridge.IMessage;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+//Person table creates in resources/schema.sql file when application runs
 @Entity
 @Component
 @Table(name = "Person")
@@ -16,16 +16,19 @@ public class Person {
     private int id;
 
     @Column(name = "name")
-    @Pattern(regexp = "^[a-zA-Z]{3,15}$", message = "Please enter your name only with letters between 3 and 15 characters")
+    //can be used only letters duration from 3 till 15
+    @Pattern(regexp = "^[a-zA-Z]{3,15}$", message = "Please enter your name only with letters between 3 and 15 characters ")
     private String name;
 
     @Column(name = "surname")
-    @Pattern(regexp = "^[a-zA-Z]{3,15}$", message = "Please enter your surname only with letters between 3 and 20 characters")
+    //can be used only letters duration from 3 till 20
+    @Pattern(regexp = "^[a-zA-Z]{3,20}$", message = "Please enter your surname only with letters between 3 and 20 characters")
     private String surname;
 
 
     @Column(name = "email")
     @NotEmpty(message = "Please enter your email")
+    //only email format can be entered
     @Email(message = "Please enter valid email")
     private String email;
 

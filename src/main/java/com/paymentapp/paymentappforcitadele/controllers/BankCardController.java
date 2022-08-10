@@ -39,6 +39,7 @@ public class BankCardController {
         this.bookService = bookService;
     }
 
+    //Creating body for drop down list for field "Year" on purchase form starting from today for next 5Y.
     @ModelAttribute("yearPicker")
     public List<YearPicker> pickYear(){
         LocalDate today = LocalDate.now();
@@ -49,9 +50,11 @@ public class BankCardController {
         list.add(new YearPicker(today.plusYears(2).getYear()));
         list.add(new YearPicker(today.plusYears(3).getYear()));
         list.add(new YearPicker(today.plusYears(4).getYear()));
+        list.add(new YearPicker(today.plusYears(5).getYear()));
         return list;
     }
 
+    //Creating body for drop down list for field "Month" on purchase form. List of 12MO
     @ModelAttribute("monthPicker")
     public List<MonthPicker> pickMonth(){
         List<MonthPicker> list = new ArrayList<>();
@@ -63,6 +66,8 @@ public class BankCardController {
     }
 
 
+    //this method receives certain book id according to which one client have chosen from the list. "Id" assigns to int
+    //variable and by book id can be found correct book from DB and it's details will be shown above purchase form
     @GetMapping("/{id}/purchase")
     public String purchase(@ModelAttribute("bankCard") BankCard bankCard, Model model,
                             @PathVariable("id") int id){
@@ -70,30 +75,41 @@ public class BankCardController {
         return "/purchase/enteringdata";
     }
 
+    //all data entered by client in purchase form will be assigned to certain objects fields: Bank Card and Person
+    //Afterwards Person model will be saved in DB with correctly set book according to book id. Bank Card won't be saved
+    // in DB taking into account security policy.
     @PostMapping("/{id}/purchase")
     public String performPurchase(@ModelAttribute("bankCard") @Valid BankCard bankCard, BindingResult bindingResult,
                                   Model model, @PathVariable("id") int id, @RequestParam("month") int month,
                                   @RequestParam("year") int year){
         model.addAttribute("book", bookService.findById(id));
+        //bank card's expiry date considers month's latest day so this method calculates certain amount of days in
+        // month which was chosen in "bank card expiry date" field
         YearMonth yearMonth = YearMonth.of(year, month);
         bankCard.setExpiryDate(LocalDate.of(year, month, yearMonth.lengthOfMonth()));
+        //Person model is Bank Card field, so using validation for Bank Card it will also validate Person fields
         bankCardValidator.validate(bankCard, bindingResult);
         if(bindingResult.hasErrors()) return ("/purchase/enteringdata");
 
         String cardNumber = bankCard.getCardNumber();
         bankCard.getPerson().setBook(bookService.findById(id));
+        //bank card last 4 digits will be used in mail body and will be taken from Person field
         bankCard.getPerson().setCardLastFourDigits(cardNumber.substring(cardNumber.length() - 4));
         personService.savePerson(bankCard.getPerson());
+        //we retrieve person from DB to use his id as dynamic parameter in mail sending page
         Person person = personService.findByBookId(id);
 
         return "redirect:/mail/" + person.getId();
     }
 
+    //this method receives person id to find correct person from DB and use his details in mail body
     @GetMapping("/mail/{id}")
     public String mailSender(@PathVariable("id") int id,Model model){
         Person person = personService.findById(id);
         model.addAttribute("person", person);
+        //email will be sent with all needed information from Person fields
         emailSenderService.sendEmail(person);
+        //for security purpose last 4 digits of bank card will be hashed with md5 and updated in DB
         person.setCardLastFourDigits(personService.hashGenerator(person.getCardLastFourDigits()));
         personService.savePerson(person);
 
@@ -101,6 +117,8 @@ public class BankCardController {
     }
 
 
+    //this method receives dynamic parameter "bookType" from url to assign it to String variable. Using this parameter
+    // we can find correct books in DB and show it to the client
     @GetMapping("/list/{bookType}")
     public String showListOfBooks(@PathVariable String bookType, Model model) {
         model.addAttribute("bookList",bookService.findByType(bookType));

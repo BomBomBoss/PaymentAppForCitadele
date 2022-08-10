@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+//Service for Book model to work with Book table transactions in DB
 @Service
 @Transactional(readOnly = true)
 public class BookService {

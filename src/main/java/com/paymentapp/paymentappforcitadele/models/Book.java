@@ -1,9 +1,13 @@
 package com.paymentapp.paymentappforcitadele.models;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
+//Book table creates in resources/schema.sql file when application runs
 @Entity
 @Table(name = "Book")
+@Component
 public class Book {
 
     @Id
