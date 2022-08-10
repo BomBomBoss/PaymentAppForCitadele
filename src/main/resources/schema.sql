@@ -28,8 +28,6 @@ create table Bankcard  (
                            card_number varchar(50) not null ,
                            expiry_date date not null,
                            verification_code int not null ,
-                           bankcard_year int,
-                           bankcard_month int,
                            person_id int,
                            foreign key (person_id) references Person(id)
 );

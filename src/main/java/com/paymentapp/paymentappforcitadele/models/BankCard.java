@@ -21,8 +21,7 @@ public class BankCard {
 
 
 
-    @NotNull(message = "Please enter card number")
-    @Pattern(regexp = "^\\d{16}", message = "Please enter correct verification number. 16 numbers allowed")
+    @Pattern(regexp = "^\\d{12,19}", message = "Card Number Length should be from 12 till 19 numbers")
     @Column(name = "card_number")
     private String cardNumber;
 
@@ -31,15 +30,9 @@ public class BankCard {
     @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
-    @Column(name = "bankcard_year")
-    private int year;
-
-    @Column(name = "bankcard_month")
-    private int month;
 
 
-    @NotNull(message = "Please enter card verification number")
-    @Pattern(regexp = "^\\d{3}", message = "Please enter correct verification number. 3 numbers allowed")
+    @Pattern(regexp = "^\\d{3,4}", message = "Please enter correct verification number. 3-4 numbers allowed")
     @Column(name = "verification_code")
     private String verificationCode;
 
@@ -99,21 +92,6 @@ public class BankCard {
         this.person = person;
     }
 
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
 
     public int getId() {
         return id;
@@ -134,27 +112,5 @@ public class BankCard {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        BankCard bankCard = (BankCard) o;
-
-        if (year != bankCard.year) return false;
-        if (month != bankCard.month) return false;
-        if (cardNumber != null ? !cardNumber.equals(bankCard.cardNumber) : bankCard.cardNumber != null) return false;
-        if (expiryDate != null ? !expiryDate.equals(bankCard.expiryDate) : bankCard.expiryDate != null) return false;
-        return verificationCode != null ? verificationCode.equals(bankCard.verificationCode) : bankCard.verificationCode == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = cardNumber != null ? cardNumber.hashCode() : 0;
-        result = 31 * result + (expiryDate != null ? expiryDate.hashCode() : 0);
-        result = 31 * result + year;
-        result = 31 * result + month;
-        result = 31 * result + (verificationCode != null ? verificationCode.hashCode() : 0);
-        return result;
-    }
 }

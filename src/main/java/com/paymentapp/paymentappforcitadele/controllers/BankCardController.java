@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -78,10 +75,11 @@ public class BankCardController {
 
     @PostMapping("/{id}/purchase")
     public String performPurchase(@ModelAttribute("bankCard") @Valid BankCard bankCard, BindingResult bindingResult,
-                                 Model model, @PathVariable("id") int id){
+                                  Model model, @PathVariable("id") int id, @RequestParam("month") int month,
+                                  @RequestParam("year") int year){
         model.addAttribute("book", bookService.findById(id));
-        YearMonth yearMonth = YearMonth.of(bankCard.getYear(), bankCard.getMonth());
-        bankCard.setExpiryDate(LocalDate.of(bankCard.getYear(), bankCard.getMonth(), yearMonth.lengthOfMonth()));
+        YearMonth yearMonth = YearMonth.of(year, month);
+        bankCard.setExpiryDate(LocalDate.of(year, month, yearMonth.lengthOfMonth()));
         bankCardValidator.validate(bankCard, bindingResult);
         if(bindingResult.hasErrors()) return ("/purchase/enteringdata");
 
