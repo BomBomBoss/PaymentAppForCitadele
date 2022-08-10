@@ -32,7 +32,7 @@ public class EmailSenderService {
         String mailTo = person.getEmail();
         String subject = "Payment confirmation";
         String body = "Dear, " + person.getName() + ", your payment was performed with card ****" +
-        person.getBankCard().getCardNumber().substring(12,16) + " at this date: "+ LocalDate.now()
+        person.getCardLastFourDigits() + " at this date: "+ LocalDate.now()
                 + " and time: " + LocalTime.now().truncatedTo(ChronoUnit.MINUTES) +"\n\rBook title: " + book.getTitle()
                 + "\n\rAuthor: " + book.getAuthor() + "\n\rBook Price: " + book.getPrice() + "$";
 

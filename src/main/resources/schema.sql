@@ -17,17 +17,8 @@ create table Person (
                         name varchar(100) not null ,
                         surname varchar(100) not null,
                         email varchar(50) not null ,
+                        card_last_four_digits varchar,
                         book_id int,
                         foreign key (book_id) references Book(id)
 );
 
-drop table if exists Bankcard;
-
-create table Bankcard  (
-                           id int primary key auto_increment ,
-                           card_number varchar(50) not null ,
-                           expiry_date date not null,
-                           verification_code int not null ,
-                           person_id int,
-                           foreign key (person_id) references Person(id)
-);

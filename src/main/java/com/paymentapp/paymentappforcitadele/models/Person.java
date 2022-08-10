@@ -29,12 +29,13 @@ public class Person {
     @Email(message = "Please enter valid email")
     private String email;
 
+    @Column(name = "card_last_four_digits")
+    private String cardLastFourDigits;
+
     @OneToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 
-    @OneToOne(mappedBy = "person", cascade = CascadeType.MERGE)
-    private BankCard bankCard;
 
     public Person(String name, String surname, String email) {
         this.name = name;
@@ -49,13 +50,6 @@ public class Person {
         return id;
     }
 
-    public BankCard getBankCard() {
-        return bankCard;
-    }
-
-    public void setBankCard(BankCard bankCard) {
-        this.bankCard = bankCard;
-    }
 
     public String getName() {
         return name;
@@ -81,6 +75,13 @@ public class Person {
         this.email = email;
     }
 
+    public String getCardLastFourDigits() {
+        return cardLastFourDigits;
+    }
+
+    public void setCardLastFourDigits(String cardLastFourDigits) {
+        this.cardLastFourDigits = cardLastFourDigits;
+    }
 
     public Book getBook() {
         return book;

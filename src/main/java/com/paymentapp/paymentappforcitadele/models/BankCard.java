@@ -11,34 +11,21 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Component
-@Entity
-@Table(name = "Bankcard")
 public class BankCard {
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
-
-
-
-    @Pattern(regexp = "^\\d{12,19}", message = "Card Number Length should be from 12 till 19 numbers")
-    @Column(name = "card_number")
+    @Pattern(regexp = "^\\d{12,19}", message = "Card number length should be from 12 till 19 numbers")
     private String cardNumber;
 
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
 
 
-    @Pattern(regexp = "^\\d{3,4}", message = "Please enter correct verification number. 3-4 numbers allowed")
-    @Column(name = "verification_code")
+    @Pattern(regexp = "^\\d{3,4}", message = "Please enter correct verification number: 3-4 numbers allowed")
     private String verificationCode;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
 
     public BankCard() {
@@ -93,18 +80,10 @@ public class BankCard {
     }
 
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
         return "BankCard{" +
-                "id=" + id +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", expiryDate=" + expiryDate +
                 ", verificationCode='" + verificationCode + '\'' +
