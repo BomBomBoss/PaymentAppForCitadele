@@ -95,12 +95,12 @@
     <br/>
     <div>
         <label class="col-sm-4 col-form-label">Please pick Card Expiry Date:</label>
-        <select th:object="${bankCard}" th:field="*{month}" >
+        <select  name="month" >
             <option th:each="month : ${monthPicker}"
                     th:value="${month.getMonth()}"
                     th:text="${month.getMonth()}"
             ></option></select>
-            <select th:object="${bankCard}" th:field="*{year}" >
+            <select name="year" >
         <option th:each="year : ${yearPicker}"
                 th:value="${year.getShortYear()}"
                 th:text="${year.getShortYear()}"
