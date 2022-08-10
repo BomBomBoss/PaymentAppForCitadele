@@ -3,7 +3,6 @@ package com.paymentapp.paymentappforcitadele.util;
 import com.paymentapp.paymentappforcitadele.models.BankCard;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;

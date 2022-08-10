@@ -8,10 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Optional;
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
@@ -21,9 +20,9 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public boolean savePerson(Person person) {
-        personRepository.save(person);
-        return true;
+    @Transactional
+    public Person savePerson(Person person) {
+       return personRepository.save(person);
     }
 
     public Person findById (int id) {

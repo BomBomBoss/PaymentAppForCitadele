@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.util.Assert;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PersonServiceTest {
@@ -21,21 +22,9 @@ class PersonServiceTest {
 
     @Test
     void savePerson() {
-        Person person = new Person();
-
-        boolean isSaved = personService.savePerson(person);
-        Person person1 = personService.findById(1);
-        Person person2 = personService.findById(2);
-        Assert.isTrue(isSaved, "Saved");
-        Assert.isNull(person2);
-        Assert.notNull(person1);
+        Person person = new Person("Name1", "Surname2", "test@mail.com");
+        when(personRepository.save(person)).thenReturn(person);
+        assertEquals(person, personService.savePerson(person));
     }
 
-    @Test
-    void findById() {
-    }
-
-    @Test
-    void findByBookId() {
-    }
 }
