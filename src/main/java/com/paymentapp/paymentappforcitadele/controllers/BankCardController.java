@@ -11,12 +11,10 @@ import com.paymentapp.paymentappforcitadele.util.BankCardValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -86,9 +84,7 @@ public class BankCardController {
         bankCard.getPerson().setBook(bookService.findById(id));
         bankCard.getPerson().setCardLastFourDigits(cardNumber.substring(cardNumber.length() - 4));
         personService.savePerson(bankCard.getPerson());
-        bankCard = null;
         Person person = personService.findByBookId(id);
-
 
         return "redirect:/mail/" + person.getId();
     }
@@ -114,6 +110,4 @@ public class BankCardController {
 
 }
 
-// Vladislav , Miheenkov , 1234567891234567 , 123, vladjuha13@gmail.com
-// name = ForTests surname = TestsProject email = fortestprojects123@gmail.com password = ForTestProjects123
 

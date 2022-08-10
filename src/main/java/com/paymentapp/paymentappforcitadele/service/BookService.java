@@ -1,15 +1,16 @@
 package com.paymentapp.paymentappforcitadele.service;
 
 import com.paymentapp.paymentappforcitadele.models.Book;
-import com.paymentapp.paymentappforcitadele.models.Person;
 import com.paymentapp.paymentappforcitadele.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class BookService {
 
 
@@ -28,10 +29,5 @@ public class BookService {
         Optional<Book> book = bookRepository.findById(id);
         return book.orElse(null);
     }
-
-    public List<Book> showAll() {
-        return bookRepository.findAll();
-    }
-
 
 }
