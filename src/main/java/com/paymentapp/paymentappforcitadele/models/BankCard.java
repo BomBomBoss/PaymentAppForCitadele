@@ -4,33 +4,48 @@ package com.paymentapp.paymentappforcitadele.models;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Component
+@Entity
+@Table(name = "Bankcard")
 public class BankCard {
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private int id;
 
 
 
     @NotNull(message = "Please enter card number")
     @Pattern(regexp = "^\\d{16}", message = "Please enter correct verification number. 16 numbers allowed")
+    @Column(name = "card_number")
     private String cardNumber;
 
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
+    @Column(name = "bankcard_year")
     private int year;
 
+    @Column(name = "bankcard_month")
     private int month;
 
 
     @NotNull(message = "Please enter card verification number")
     @Pattern(regexp = "^\\d{3}", message = "Please enter correct verification number. 3 numbers allowed")
+    @Column(name = "verification_code")
     private String verificationCode;
 
     @Valid
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
 
     public BankCard() {
@@ -100,14 +115,22 @@ public class BankCard {
         this.month = month;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
         return "BankCard{" +
+                "id=" + id +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", expiryDate=" + expiryDate +
                 ", verificationCode='" + verificationCode + '\'' +
+                ", person=" + person +
                 '}';
     }
 

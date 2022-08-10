@@ -76,7 +76,7 @@
 <main class="px-2">
 <h1> Please select preferred book</h1>
 <div th:each="books : ${bookList}">
-   <a th:href="@{/{bookType}/{id}/purchase(bookType = ${bookType},id=${books.getId()})}" th:text="${books.getTitle()}">book</a>
+   <a th:href="@{/{id}/purchase(id=${books.getId()})}" th:text="${books.getTitle()}">book</a>
     <p th:text="${'Author: ' + books.getAuthor()  + ' | Price: ' + books.getPrice() + '$' + ' | Year: ' + books.getYear()}"></p>
     <p th:text="${'Description: ' + books.getDescription()}"></p>
     <hr>

@@ -2,6 +2,7 @@ package com.paymentapp.paymentappforcitadele.controllers;
 
 import com.paymentapp.paymentappforcitadele.models.BankCard;
 import com.paymentapp.paymentappforcitadele.models.MonthPicker;
+import com.paymentapp.paymentappforcitadele.models.Person;
 import com.paymentapp.paymentappforcitadele.models.YearPicker;
 import com.paymentapp.paymentappforcitadele.service.BankCardService;
 import com.paymentapp.paymentappforcitadele.service.BookService;
@@ -68,41 +69,37 @@ public class BankCardController {
     }
 
 
-    @GetMapping("/{bookType}/{id}/purchase")
+    @GetMapping("/{id}/purchase")
     public String purchase(@ModelAttribute("bankCard") BankCard bankCard, Model model,
-                           @PathVariable("bookType") String type, @PathVariable("id") int id){
-        model.addAttribute("book", bookService.findById(type, id));
-        model.addAttribute("bookType", type);
-        model.addAttribute("id", id);
+                            @PathVariable("id") int id){
+        model.addAttribute("book", bookService.findById(id));
         return "/purchase/enteringdata";
     }
 
-    @PostMapping("{bookType}/{id}/purchase")
-    public String performPurchase(@ModelAttribute @Valid BankCard bankCard, BindingResult bindingResult,
-                                 Model model, @PathVariable("bookType") String type, @PathVariable("id") int id){
-        model.addAttribute("book", bookService.findById(type, id));
-        model.addAttribute("bookType", type);
-        model.addAttribute("id", id);
+    @PostMapping("/{id}/purchase")
+    public String performPurchase(@ModelAttribute("bankCard") @Valid BankCard bankCard, BindingResult bindingResult,
+                                 Model model, @PathVariable("id") int id){
+        model.addAttribute("book", bookService.findById(id));
         YearMonth yearMonth = YearMonth.of(bankCard.getYear(), bankCard.getMonth());
         bankCard.setExpiryDate(LocalDate.of(bankCard.getYear(), bankCard.getMonth(), yearMonth.lengthOfMonth()));
         bankCardValidator.validate(bankCard, bindingResult);
         if(bindingResult.hasErrors()) return ("/purchase/enteringdata");
 
-        personService.savePerson(bankCard.getPerson());
-        bankCard.getPerson().setBook(bookService.findById(type,id));
-        int cardId = bankCardService.saveBankCard(bankCard);
+        bankCard.getPerson().setBankCard(bankCard);
+        bankCard.getPerson().setBook(bookService.findById(id));
+        bankCardService.saveBankCard(bankCard);
+        Person person = personService.findByBookId(id);
 
-        personService.showAll();//for test
-        bankCardService.showAll(); // for test
-        return "redirect:/mail/" + cardId;
+
+        return "redirect:/mail/" + person.getId();
     }
 
     @GetMapping("/mail/{id}")
     public String mailSender(@PathVariable("id") int id,Model model){
-        BankCard bankCard = bankCardService.findById(id);
-        model.addAttribute("person", bankCard.getPerson());
-        emailSenderService.sendEmail(bankCard);
-        System.out.println(bankCard);
+        Person person = personService.findById(id);
+        System.out.println(person.getBankCard().getCardNumber());
+        model.addAttribute("person", person);
+        emailSenderService.sendEmail(person);
         return "complete";
     }
 
@@ -111,7 +108,6 @@ public class BankCardController {
     public String showListOfBooks(@PathVariable String bookType, Model model) {
         model.addAttribute("bookList",bookService.findByType(bookType));
         model.addAttribute("bookType", bookType);
-        System.out.println(bookService.findByType(bookType));//just for test
         return "/list";
     }
 
