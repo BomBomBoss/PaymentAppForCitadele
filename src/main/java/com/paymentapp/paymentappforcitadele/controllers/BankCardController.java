@@ -4,7 +4,6 @@ import com.paymentapp.paymentappforcitadele.models.BankCard;
 import com.paymentapp.paymentappforcitadele.models.MonthPicker;
 import com.paymentapp.paymentappforcitadele.models.Person;
 import com.paymentapp.paymentappforcitadele.models.YearPicker;
-import com.paymentapp.paymentappforcitadele.service.BankCardService;
 import com.paymentapp.paymentappforcitadele.service.BookService;
 import com.paymentapp.paymentappforcitadele.service.EmailSenderService;
 import com.paymentapp.paymentappforcitadele.service.PersonService;
@@ -12,10 +11,12 @@ import com.paymentapp.paymentappforcitadele.util.BankCardValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -27,17 +28,15 @@ public class BankCardController {
 
     private final BankCardValidator bankCardValidator;
     private final PersonService personService;
-    private final BankCardService bankCardService;
     private final EmailSenderService emailSenderService;
     private final BookService bookService;
 
 
 
     @Autowired
-    public BankCardController(BankCardValidator bankCardValidator,PersonService personService, BankCardService bankCardService, EmailSenderService emailSenderService, BookService bookService) {
+    public BankCardController(BankCardValidator bankCardValidator,PersonService personService, EmailSenderService emailSenderService, BookService bookService) {
         this.bankCardValidator = bankCardValidator;
         this.personService = personService;
-        this.bankCardService = bankCardService;
         this.emailSenderService = emailSenderService;
         this.bookService = bookService;
     }
@@ -83,9 +82,11 @@ public class BankCardController {
         bankCardValidator.validate(bankCard, bindingResult);
         if(bindingResult.hasErrors()) return ("/purchase/enteringdata");
 
-        bankCard.getPerson().setBankCard(bankCard);
+        String cardNumber = bankCard.getCardNumber();
         bankCard.getPerson().setBook(bookService.findById(id));
-        bankCardService.saveBankCard(bankCard);
+        bankCard.getPerson().setCardLastFourDigits(cardNumber.substring(cardNumber.length() - 4));
+        personService.savePerson(bankCard.getPerson());
+        bankCard = null;
         Person person = personService.findByBookId(id);
 
 
@@ -95,9 +96,11 @@ public class BankCardController {
     @GetMapping("/mail/{id}")
     public String mailSender(@PathVariable("id") int id,Model model){
         Person person = personService.findById(id);
-        System.out.println(person.getBankCard().getCardNumber());
         model.addAttribute("person", person);
         emailSenderService.sendEmail(person);
+        person.setCardLastFourDigits(personService.hashGenerator(person.getCardLastFourDigits()));
+        personService.savePerson(person);
+
         return "complete";
     }
 
