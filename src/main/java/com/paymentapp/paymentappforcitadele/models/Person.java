@@ -104,4 +104,28 @@ public class Person {
                 ", book=" + book +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        if (id != person.id) return false;
+        if (name != null ? !name.equals(person.name) : person.name != null) return false;
+        if (surname != null ? !surname.equals(person.surname) : person.surname != null) return false;
+        if (email != null ? !email.equals(person.email) : person.email != null) return false;
+        return cardLastFourDigits != null ? cardLastFourDigits.equals(person.cardLastFourDigits) : person.cardLastFourDigits == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (cardLastFourDigits != null ? cardLastFourDigits.hashCode() : 0);
+        return result;
+    }
 }

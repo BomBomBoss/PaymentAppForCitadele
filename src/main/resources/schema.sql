@@ -19,6 +19,6 @@ create table Person (
                         email varchar(50) not null ,
                         card_last_four_digits varchar,
                         book_id int,
-                        foreign key (book_id) references Book(id)
+                        foreign key (book_id) references Book(id) on delete set null
 );
 
