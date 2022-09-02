@@ -5,6 +5,9 @@ Web application where client can choose specific book for acquiring.
 Purchase can be performed with valid bank card. Luhn Alogirthm implemeted.
 All neccesary purchase information will be send via mail.
 
+Added 02.09.2022.
+Please use your Email and Password in application.properties file and EmailSenderService class
+
 
 ![](header.png)
 
